@@ -10,12 +10,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".TaskListActivikty"
+            android:label="@string/title_activity_task_list_activikty"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".TaskList" />
+        <activity android:name=".TaskDetailActivity"></activity>
     </application>
 
 </manifest>

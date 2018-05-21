@@ -1,11 +1,15 @@
 package com.bertrandechapman.mytasksproject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -18,14 +22,18 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private TextView mPasswordView;
     private TextView mEmailView;
+    private ProgressBar mProgressBar;
+    private Button mSignInBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mPasswordView = (TextView) findViewById(R.id.txtPassword);
-        mEmailView = (TextView) findViewById(R.id.txtUsername);
+        mPasswordView = findViewById(R.id.txtPassword);
+        mEmailView = findViewById(R.id.txtUsername);
+        mProgressBar = findViewById(R.id.pbLogin);
+        mSignInBtn = findViewById(R.id.btnLogin);
 
         mAuth = FirebaseAuth.getInstance();
     }
@@ -34,16 +42,35 @@ public class LoginActivity extends AppCompatActivity {
 
         Log.i("Event", "Sign in clicked");
 
-        mAuth.signInWithEmailAndPassword(mEmailView.getText().toString(), mPasswordView.getText().toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+        CharSequence email = mEmailView.getText();
+        CharSequence password = mPasswordView.getText();
+
+        mProgressBar.setVisibility(View.VISIBLE);
+        mSignInBtn.setVisibility(View.INVISIBLE);
+
+        mAuth.signInWithEmailAndPassword(email.toString(), password.toString()).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
 
+                mSignInBtn.setVisibility(View.VISIBLE);
+                mProgressBar.setVisibility(View.INVISIBLE);
+
                 if (task.isSuccessful()) {
                     Log.i("Event", "Success");
+                    Intent intent = new Intent(getBaseContext(), TaskList.class);
+                    startActivity(intent);
+                    finish();
                 } else {
                     Log.i("Event", "Unsuccessful");
+                    Toast.makeText(LoginActivity.this, "Incorrect username or password", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+    }
+
+    private Boolean isEmailValid(CharSequence email) {
+
+        return true;
     }
 }
