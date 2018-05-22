@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.bertrandechapman.mytasksproject.TaskFragment.OnListFragmentInteractionListener;
+import com.bertrandechapman.mytasksproject.TaskListFragment.OnListFragmentInteractionListener;
 
 import java.util.List;
 
@@ -15,13 +15,18 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecyclerViewAdapter.ViewHolder> {
+public class TaskRecyclerViewAdapter extends RecyclerView.Adapter<TaskRecyclerViewAdapter.ViewHolder> implements TaskProvider.TaskUpdateListener {
 
-    private final List<FirestoreTask> mValues;
     private final OnListFragmentInteractionListener mListener;
 
-    public MyTaskRecyclerViewAdapter(List<FirestoreTask> items, OnListFragmentInteractionListener listener) {
-        mValues = items;
+    private final TaskProvider taskProvider;
+
+    public TaskRecyclerViewAdapter(OnListFragmentInteractionListener listener, TaskProvider taskProvider) {
+
+        this.taskProvider = taskProvider;
+
+        this.taskProvider.addTaskUpdateListener(this);
+
         mListener = listener;
     }
 
@@ -34,9 +39,8 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).getId());
-        holder.mContentView.setText(mValues.get(position).getTitle());
+        holder.mItem = taskProvider.getTasks().get(position);
+        holder.mContentView.setText(taskProvider.getTasks().get(position).getTitle());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,14 +56,29 @@ public class MyTaskRecyclerViewAdapter extends RecyclerView.Adapter<MyTaskRecycl
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return taskProvider.getTasks().size();
+    }
+
+    @Override
+    public void onNewTask(Task task) {
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onRemovedTask(Task task) {
+        this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onTasksRetrieved(List<Task> tasks) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public FirestoreTask mItem;
+        public Task mItem;
 
         public ViewHolder(View view) {
             super(view);

@@ -7,11 +7,6 @@ public class FirestoreTask extends Task {
 
     public final static ArrayList<FirestoreTask> DUMMY_ITEMS = new ArrayList<>();
 
-    static {
-        DUMMY_ITEMS.add(new FirestoreTask("1", "test1", "testing this", new Date()));
-        DUMMY_ITEMS.add(new FirestoreTask("2", "task2", "another test"));
-    }
-
     private String Id;
 
     public FirestoreTask(String Id, String title, String desc, Date createdOn) {
@@ -33,8 +28,6 @@ public class FirestoreTask extends Task {
                 "Task{" +
                 "title='" + title + '\'' +
                 ", desc='" + desc + '\'' +
-                ", createdOn=" + createdOn +
-                ", modifiedOn=" + modifiedOn +
                 '}' +
                 '}';
     }

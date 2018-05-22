@@ -1,20 +1,45 @@
 package com.bertrandechapman.mytasksproject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 
-public class Task {
+public class Task implements Parcelable {
 
     String title;
     String desc;
-    Date createdOn;
-    Date modifiedOn;
+    //Date createdOn;
+    //Date modifiedOn;
+
+    public static final Parcelable.Creator<Task> CREATOR = new Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel parcel) {
+
+            String title = parcel.readString();
+            String desc = parcel.readString();
+            return new Task(title, desc);
+        }
+
+        @Override
+        public Task[] newArray(int i) {
+            return new Task[0];
+        }
+    };
+
+    public Task(Parcel parcel) {
+        this.title = parcel.readString();
+        this.desc = parcel.readString();
+        //this.createdOn = (Date) parcel.readSerializable();
+        //this.modifiedOn = (Date) parcel.readSerializable();
+    }
 
     public Task(String title, String desc, Date createdOn) {
 
         this.title = title;
         this.desc = desc;
-        this.createdOn = createdOn;
-        this.modifiedOn = createdOn;
+        //this.createdOn = createdOn;
+        //this.modifiedOn = createdOn;
     }
 
     public Task(String title, String desc) {
@@ -26,8 +51,6 @@ public class Task {
         return "Task{" +
                 "title='" + title + '\'' +
                 ", desc='" + desc + '\'' +
-                ", createdOn=" + createdOn +
-                ", modifiedOn=" + modifiedOn +
                 '}';
     }
 
@@ -38,7 +61,7 @@ public class Task {
     public void setTitle(String title) {
         this.title = title;
 
-        taskModified();
+        //taskModified();
     }
 
     public String getDesc() {
@@ -48,28 +71,42 @@ public class Task {
     public void setDesc(String desc) {
         this.desc = desc;
 
-        taskModified();
+        //taskModified();
     }
 
-    public Date getCreatedOn() {
+    /*public Date getCreatedOn() {
         return createdOn;
-    }
+    }*/
 
-    public void setCreatedOn(Date createdOn) {
-        this.createdOn = createdOn;
+    /*public void setCreatedOn(Date createdOn) {
+       // this.createdOn = createdOn;
 
         taskModified();
-    }
+    }*/
 
-    public Date getModifiedOn() {
+    /*public Date getModifiedOn() {
         return modifiedOn;
-    }
+    }*/
 
-    public void setModifiedOn(Date modifiedOn) {
+    /*public void setModifiedOn(Date modifiedOn) {
         this.modifiedOn = modifiedOn;
+    }*/
+
+    /*public void taskModified() {
+        setModifiedOn(new Date());
+    }*/
+
+    @Override
+    public int describeContents() {
+        return 0;
     }
 
-    public void taskModified() {
-        setModifiedOn(new Date());
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
+        parcel.writeString(this.title);
+        parcel.writeString(this.desc);
+        //parcel.writeSerializable(this.createdOn);
+        //parcel.writeSerializable(this.modifiedOn);
     }
 }
